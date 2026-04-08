@@ -43,6 +43,10 @@ An interactive, responsive calendar component built using **Next.js (App Router)
 
 ---
 
+## 🌐 Live Demo
+
+https://calendar-orc8wuuyx-amulya-4115s-projects.vercel.app
+
 ## 📦 How to Run Locally
 
 ```bash
