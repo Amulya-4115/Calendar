@@ -69,184 +69,204 @@ export default function Calendar() {
         style={{
           maxWidth: "800px",
           margin: "auto",
-          display: "flex",
-          flexWrap: "wrap",
           boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
           borderRadius: "12px",
           overflow: "hidden",
           background: "white",
         }}
       >
-        {/* 📅 Calendar Section */}
-        <div style={{ flex: "1 1 300px", padding: "15px" }}>
+        {/* 🖼 HERO IMAGE */}
+       {/* 🖼 HERO IMAGE (Wall Calendar Style) */}
+<div style={{ position: "relative" }}>
+  <img
+    src="https://images.unsplash.com/photo-1506784983877-45594efa4cbe"
+    alt="calendar"
+    style={{
+      width: "100%",
+      height: "180px",
+      objectFit: "cover",
+      filter: "brightness(0.7)",
+    }}
+  />
+
+  {/* Overlay Text */}
+  <div
+    style={{
+      position: "absolute",
+      bottom: "10px",
+      left: "15px",
+      color: "white",
+    }}
+  >
+    <h2 style={{ margin: 0 }}>{monthName} {year}</h2>
+    <p style={{ margin: 0, fontSize: "12px" }}>
+      Plan your days ✨
+    </p>
+  </div>
+</div>
+
+        {/* MAIN CONTENT */}
+        <div style={{ display: "flex", flexWrap: "wrap" }}>
           
-          {/* Header */}
-          <div
-            style={{
-              background: "linear-gradient(135deg, #4f46e5, #7c3aed)",
-              color: "white",
-              padding: "10px",
-              borderRadius: "8px",
-              marginBottom: "10px",
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              fontSize: "16px",
-              fontWeight: "bold",
-            }}
-          >
-            <button onClick={() => changeMonth(-1)}>⬅️</button>
-            <span>📅 {monthName} {year}</span>
-            <button onClick={() => changeMonth(1)}>➡️</button>
+          {/* 📅 Calendar Section */}
+          <div style={{ flex: "1 1 300px", padding: "15px" }}>
+            
+            {/* Header */}
+            <div
+              style={{
+                background: "linear-gradient(135deg, #4f46e5, #7c3aed)",
+                color: "white",
+                padding: "10px",
+                borderRadius: "8px",
+                marginBottom: "10px",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                fontWeight: "bold",
+              }}
+            >
+              <button onClick={() => changeMonth(-1)}>⬅️</button>
+              <span>📅 {monthName} {year}</span>
+              <button onClick={() => changeMonth(1)}>➡️</button>
+            </div>
+
+            {/* Days */}
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(7, 1fr)",
+                fontSize: "10px",
+                textAlign: "center",
+                marginBottom: "4px",
+                color: "#666",
+              }}
+            >
+              {daysOfWeek.map((d) => (
+                <div key={d}>{d}</div>
+              ))}
+            </div>
+
+            {/* Grid */}
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(7, 1fr)",
+                gap: "4px",
+                justifyItems: "center",
+              }}
+            >
+              {Array.from({ length: firstDay }).map((_, i) => (
+                <div key={"empty-" + i} />
+              ))}
+
+              {days.map((day) => {
+                const isToday =
+                  day === today.getDate() &&
+                  month === today.getMonth() &&
+                  year === today.getFullYear();
+
+                const isInRange =
+                  start &&
+                  end &&
+                  day >= Math.min(start, end) &&
+                  day <= Math.max(start, end);
+
+                const isStart = start === day;
+                const isEnd = end === day;
+
+                return (
+                  <div
+                    key={day}
+                    onClick={() => handleClick(day)}
+                    style={{
+                      width: "36px",
+                      height: "36px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      fontSize: "12px",
+                      cursor: "pointer",
+                      border: isToday ? "2px solid red" : "1px solid #ddd",
+                      borderRadius: "6px",
+                      position: "relative",
+                      background:
+                        isStart || isEnd
+                          ? "#2563eb"
+                          : isInRange
+                          ? "#bfdbfe"
+                          : "#fff",
+                      color: isStart || isEnd ? "white" : "black",
+                    }}
+                  >
+                    {day}
+
+                    {notes[getKey(day)] && (
+                      <div
+                        style={{
+                          width: "4px",
+                          height: "4px",
+                          background: "red",
+                          borderRadius: "50%",
+                          position: "absolute",
+                          bottom: "3px",
+                        }}
+                      />
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Selected Range */}
+            {start && end && (
+              <p style={{ marginTop: "10px", fontSize: "12px" }}>
+                Selected: {start} → {end}
+              </p>
+            )}
           </div>
 
-          {/* Days */}
+          {/* 📝 Notes Section */}
           <div
             style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(7, 1fr)",
-              fontSize: "10px",
-              textAlign: "center",
-              marginBottom: "4px",
-              color: "#666",
+              flex: "1 1 250px",
+              padding: "15px",
+              borderLeft: "1px solid #eee",
             }}
           >
-            {daysOfWeek.map((d) => (
-              <div key={d}>{d}</div>
-            ))}
-          </div>
+            <h3>Notes</h3>
 
-          {/* Grid */}
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(7, 1fr)",
-              gap: "4px",
-              justifyItems: "center",
-            }}
-          >
-            {Array.from({ length: firstDay }).map((_, i) => (
-              <div key={"empty-" + i} />
-            ))}
+            {selectedDay ? (
+              <>
+                <p>Day {selectedDay}</p>
 
-            {days.map((day) => {
-              const isToday =
-                day === today.getDate() &&
-                month === today.getMonth() &&
-                year === today.getFullYear();
+                <textarea
+                  value={note}
+                  onChange={(e) => setNote(e.target.value)}
+                  rows={4}
+                  placeholder="Write something for this day..."
+                  style={{ width: "100%", marginTop: "5px" }}
+                />
 
-              const isInRange =
-                start &&
-                end &&
-                day >= Math.min(start, end) &&
-                day <= Math.max(start, end);
-
-              const isStart = start === day;
-              const isEnd = end === day;
-
-              return (
-                <div
-                  key={day}
-                  onClick={() => handleClick(day)}
-                  onMouseEnter={(e) =>
-                    (e.currentTarget.style.background = "#e0e7ff")
-                  }
-                  onMouseLeave={(e) =>
-                    (e.currentTarget.style.background =
-                      isStart || isEnd
-                        ? "#2563eb"
-                        : isInRange
-                        ? "#bfdbfe"
-                        : "#fff")
-                  }
+                <button
+                  onClick={saveNote}
                   style={{
-                    width: "36px",
-                    height: "36px",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    fontSize: "12px",
+                    marginTop: "8px",
+                    width: "100%",
+                    padding: "8px",
+                    background: "#2563eb",
+                    color: "white",
+                    border: "none",
                     cursor: "pointer",
-                    border: isToday ? "2px solid red" : "1px solid #ddd",
                     borderRadius: "6px",
-                    position: "relative",
-                    background:
-                      isStart || isEnd
-                        ? "#2563eb"
-                        : isInRange
-                        ? "#bfdbfe"
-                        : "#fff",
-                    color: isStart || isEnd ? "white" : "black",
                   }}
                 >
-                  {day}
-
-                  {notes[getKey(day)] && (
-                    <div
-                      style={{
-                        width: "4px",
-                        height: "4px",
-                        background: "red",
-                        borderRadius: "50%",
-                        position: "absolute",
-                        bottom: "3px",
-                      }}
-                    />
-                  )}
-                </div>
-              );
-            })}
+                  Save
+                </button>
+              </>
+            ) : (
+              <p>Select a day to add notes</p>
+            )}
           </div>
-
-          {/* Selected Range */}
-          {start && end && (
-            <p style={{ marginTop: "10px", fontSize: "12px", color: "#444" }}>
-              Selected: {start} → {end}
-            </p>
-          )}
-        </div>
-
-        {/* 📝 Notes Section */}
-        <div
-          style={{
-            flex: "1 1 250px",
-            padding: "15px",
-            borderLeft: "1px solid #eee",
-          }}
-        >
-          <h3>Notes</h3>
-
-          {selectedDay ? (
-            <>
-              <p>Day {selectedDay}</p>
-
-              <textarea
-                value={note}
-                onChange={(e) => setNote(e.target.value)}
-                rows={4}
-                placeholder="Write something for this day..."
-                style={{ width: "100%", marginTop: "5px" }}
-              />
-
-              <button
-                onClick={saveNote}
-                style={{
-                  marginTop: "8px",
-                  width: "100%",
-                  padding: "8px",
-                  background: "#2563eb",
-                  color: "white",
-                  border: "none",
-                  cursor: "pointer",
-                  borderRadius: "6px",
-                }}
-              >
-                Save
-              </button>
-            </>
-          ) : (
-            <p>Select a day to add notes</p>
-          )}
         </div>
       </div>
     </div>
