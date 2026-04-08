@@ -65,8 +65,6 @@ export default function Calendar() {
 
   return (
     <div style={{ padding: "20px" }}>
-      
-      {/* 🔥 Main Container */}
       <div
         style={{
           maxWidth: "800px",
@@ -79,18 +77,26 @@ export default function Calendar() {
           background: "white",
         }}
       >
-
         {/* 📅 Calendar Section */}
         <div style={{ flex: "1 1 300px", padding: "15px" }}>
-
-          {/* Header with Month Switch */}
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          
+          {/* Header */}
+          <div
+            style={{
+              background: "linear-gradient(135deg, #4f46e5, #7c3aed)",
+              color: "white",
+              padding: "10px",
+              borderRadius: "8px",
+              marginBottom: "10px",
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              fontSize: "16px",
+              fontWeight: "bold",
+            }}
+          >
             <button onClick={() => changeMonth(-1)}>⬅️</button>
-
-            <h2>
-              📅 {monthName} {year}
-            </h2>
-
+            <span>📅 {monthName} {year}</span>
             <button onClick={() => changeMonth(1)}>➡️</button>
           </div>
 
@@ -142,6 +148,17 @@ export default function Calendar() {
                 <div
                   key={day}
                   onClick={() => handleClick(day)}
+                  onMouseEnter={(e) =>
+                    (e.currentTarget.style.background = "#e0e7ff")
+                  }
+                  onMouseLeave={(e) =>
+                    (e.currentTarget.style.background =
+                      isStart || isEnd
+                        ? "#2563eb"
+                        : isInRange
+                        ? "#bfdbfe"
+                        : "#fff")
+                  }
                   style={{
                     width: "36px",
                     height: "36px",
@@ -153,14 +170,12 @@ export default function Calendar() {
                     border: isToday ? "2px solid red" : "1px solid #ddd",
                     borderRadius: "6px",
                     position: "relative",
-
                     background:
                       isStart || isEnd
                         ? "#2563eb"
                         : isInRange
                         ? "#bfdbfe"
                         : "#fff",
-
                     color: isStart || isEnd ? "white" : "black",
                   }}
                 >
@@ -185,7 +200,7 @@ export default function Calendar() {
 
           {/* Selected Range */}
           {start && end && (
-            <p style={{ marginTop: "10px", fontSize: "12px" }}>
+            <p style={{ marginTop: "10px", fontSize: "12px", color: "#444" }}>
               Selected: {start} → {end}
             </p>
           )}
@@ -209,6 +224,7 @@ export default function Calendar() {
                 value={note}
                 onChange={(e) => setNote(e.target.value)}
                 rows={4}
+                placeholder="Write something for this day..."
                 style={{ width: "100%", marginTop: "5px" }}
               />
 
@@ -222,6 +238,7 @@ export default function Calendar() {
                   color: "white",
                   border: "none",
                   cursor: "pointer",
+                  borderRadius: "6px",
                 }}
               >
                 Save
@@ -231,7 +248,6 @@ export default function Calendar() {
             <p>Select a day to add notes</p>
           )}
         </div>
-
       </div>
     </div>
   );
